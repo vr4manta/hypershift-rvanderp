@@ -46,6 +46,7 @@ import (
 	capiazure "sigs.k8s.io/cluster-api-provider-azure/api/v1beta1"
 	capipowervs "sigs.k8s.io/cluster-api-provider-ibmcloud/api/v1beta1"
 	capikubevirt "sigs.k8s.io/cluster-api-provider-kubevirt/api/v1alpha1"
+	capivsphere "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
 	capiv1 "sigs.k8s.io/cluster-api/api/v1beta1"
 	"sigs.k8s.io/cluster-api/util"
 	"sigs.k8s.io/cluster-api/util/patch"
@@ -99,6 +100,7 @@ func (r *NodePoolReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Watches(&source.Kind{Type: &capiaws.AWSMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		Watches(&source.Kind{Type: &agentv1.AgentMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		Watches(&source.Kind{Type: &capiazure.AzureMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
+		Watches(&source.Kind{Type: &capivsphere.VSphereMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		// We want to reconcile when the user data Secret or the token Secret is unexpectedly changed out of band.
 		Watches(&source.Kind{Type: &corev1.Secret{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		// We want to reconcile when the ConfigMaps referenced by the spec.config and also the core ones change.
@@ -1679,6 +1681,19 @@ func machineTemplateBuilders(hcluster *hyperv1.HostedCluster, nodePool *hyperv1.
 			o.Annotations[nodePoolAnnotation] = client.ObjectKeyFromObject(nodePool).String()
 			return nil
 		}
+	case hyperv1.VSpherePlatform:
+		template = &capivsphere.VSphereMachineTemplate{}
+		machineTemplateSpec = vSphereMachineTemplateSpec(hcluster, nodePool)
+		mutateTemplate = func(object client.Object) error {
+			o, _ := object.(*capivsphere.VSphereMachineTemplate)
+			o.Spec = *machineTemplateSpec.(*capivsphere.VSphereMachineTemplateSpec)
+			if o.Annotations == nil {
+				o.Annotations = make(map[string]string)
+			}
+			o.Annotations[nodePoolAnnotation] = client.ObjectKeyFromObject(nodePool).String()
+			return nil
+		}
+
 	default:
 		// TODO(alberto): Consider signal in a condition.
 		return nil, nil, "", fmt.Errorf("unsupported platform type: %s", nodePool.Spec.Platform.Type)

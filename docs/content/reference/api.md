@@ -5184,7 +5184,8 @@ Value must be one of:
 &#34;IBMCloud&#34;, 
 &#34;KubeVirt&#34;, 
 &#34;None&#34;, 
-&#34;PowerVS&#34;
+&#34;PowerVS&#34;, 
+&#34;VSphere&#34;
 </p>
 </td>
 </tr>
@@ -5627,7 +5628,8 @@ Value must be one of:
 &#34;IBMCloud&#34;, 
 &#34;KubeVirt&#34;, 
 &#34;None&#34;, 
-&#34;PowerVS&#34;
+&#34;PowerVS&#34;, 
+&#34;VSphere&#34;
 </p>
 </td>
 </tr>
@@ -5700,6 +5702,19 @@ PowerVSPlatformSpec
 This field is immutable. Once set, It can&rsquo;t be changed.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>vsphere</code></br>
+<em>
+<a href="#hypershift.openshift.io/v1alpha1.VSpherePlatformSpec">
+VSpherePlatformSpec
+</a>
+</em>
+</td>
+<td>
+<p>IBMCloud defines IBMCloud specific settings for components</p>
+</td>
+</tr>
 </tbody>
 </table>
 ###PlatformType { #hypershift.openshift.io/v1alpha1.PlatformType }
@@ -5738,6 +5753,9 @@ This field is immutable. Once set, It can&rsquo;t be changed.</p>
 </td>
 </tr><tr><td><p>&#34;PowerVS&#34;</p></td>
 <td><p>PowerVSPlatform represents PowerVS infrastructure.</p>
+</td>
+</tr><tr><td><p>&#34;VSphere&#34;</p></td>
+<td><p>VSpherePlatform represents vSphere infrastructure.</p>
 </td>
 </tr></tbody>
 </table>
@@ -6689,6 +6707,198 @@ additional node capacity requirements.</p>
 capacity.</p>
 </td>
 </tr></tbody>
+</table>
+###VSphereDiskType { #hypershift.openshift.io/v1alpha1.VSphereDiskType }
+<p>
+(<em>Appears on:</em>
+<a href="#hypershift.openshift.io/v1alpha1.VSpherePlatformSpec">VSpherePlatformSpec</a>)
+</p>
+<p>
+<p>VSphereDiskType is a disk provisioning type for vsphere.</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr><td><p>&#34;eagerZeroedThick&#34;</p></td>
+<td><p>DiskTypeEagerZeroedThick uses EagerZeroedThick disk provisioning type for vsphere in the cluster.</p>
+</td>
+</tr><tr><td><p>&#34;thick&#34;</p></td>
+<td><p>DiskTypeThick uses Thick disk provisioning type for vsphere in the cluster.</p>
+</td>
+</tr><tr><td><p>&#34;thin&#34;</p></td>
+<td><p>DiskTypeThin uses Thin disk provisioning type for vsphere in the cluster.</p>
+</td>
+</tr></tbody>
+</table>
+###VSpherePlatformSpec { #hypershift.openshift.io/v1alpha1.VSpherePlatformSpec }
+<p>
+(<em>Appears on:</em>
+<a href="#hypershift.openshift.io/v1alpha1.PlatformSpec">PlatformSpec</a>)
+</p>
+<p>
+<p>VSpherePlatformSpec defines VSphere specific settings for components</p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>vCenter</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>VCenter is the domain name or IP address of the vCenter.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>secretName</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>secretName refers to name of the secret containing the username and password
+required to connect to the vCenter</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>datacenter</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Datacenter is the name of the datacenter to use in the vCenter.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>defaultDatastore</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>DefaultDatastore is the default datastore to use for provisioning volumes.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>folder</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Folder is the absolute path of the folder that will be used and/or created for
+virtual machines. The absolute path is of the form /<datacenter>/vm/<folder>/<subfolder>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>cluster</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Cluster is the name of the cluster virtual machines will be cloned into.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>resourcePool</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>ResourcePool is the absolute path of the resource pool where virtual machines will be
+created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>clusterOSImage</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>ClusterOSImage overrides the url provided in rhcos.json to download the RHCOS OVA</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>apiVIP</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>APIVIP is the virtual IP address for the api endpoint</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>ingressVIP</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>IngressVIP is the virtual IP address for ingress</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>network</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Network specifies the name of the network to be used by the cluster.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>diskType</code></br>
+<em>
+<a href="#hypershift.openshift.io/v1alpha1.VSphereDiskType">
+VSphereDiskType
+</a>
+</em>
+</td>
+<td>
+<p>DiskType is the name of the disk provisioning type,
+valid values are thin, thick, and eagerZeroedThick. When not
+specified, it will be set according to the default storage policy
+of vsphere.</p>
+<p>
+Value must be one of:
+&#34;eagerZeroedThick&#34;, 
+&#34;thick&#34;, 
+&#34;thin&#34;
+</p>
+</td>
+</tr>
+</tbody>
 </table>
 ###Volume { #hypershift.openshift.io/v1alpha1.Volume }
 <p>

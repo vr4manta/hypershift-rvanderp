@@ -67,7 +67,7 @@ const (
 	// a HostedControlPlane.
 	ClusterAPIAzureProviderImage = "hypershift.openshift.io/capi-provider-azure-image"
 
-	// ClusterAPIAzureProviderImage overrides the CAPI Azure provider image to use for
+	// ClusterAPIVSphereProviderImage overrides the CAPI VSphere provider image to use for
 	// a HostedControlPlane.
 	ClusterAPIVSphereProviderImage = "hypershift.openshift.io/capi-provider-vsphere-image"
 
@@ -544,7 +544,7 @@ const (
 	// AzurePlatform represents Azure infrastructure.
 	AzurePlatform PlatformType = "Azure"
 
-	// AzurePlatform represents Azure infrastructure.
+	// VSpherePlatform represents vSphere infrastructure.
 	VSpherePlatform PlatformType = "VSphere"
 
 	// PowerVSPlatform represents PowerVS infrastructure.
@@ -587,7 +587,6 @@ type PlatformSpec struct {
 
 	// IBMCloud defines IBMCloud specific settings for components
 	VSphere *VSpherePlatformSpec `json:"vsphere,omitempty"`
-
 }
 
 // AgentPlatformSpec specifies configuration for agent-based installations.
@@ -616,16 +615,15 @@ const (
 	// DiskTypeEagerZeroedThick uses EagerZeroedThick disk provisioning type for vsphere in the cluster.
 	DiskTypeEagerZeroedThick VSphereDiskType = "eagerZeroedThick"
 )
+
 // VSpherePlatformSpec defines VSphere specific settings for components
 type VSpherePlatformSpec struct {
 	// VCenter is the domain name or IP address of the vCenter.
 	VCenter string `json:"vCenter"`
 
-	// Username is the name of the user to use to connect to the vCenter.
-	Username string `json:"username"`
-
-	// Password is the password for the user to use to connect to the vCenter.
-	Password string `json:"password"`
+	// secretName refers to name of the secret containing the username and password
+	// required to connect to the vCenter
+	SecretName string `json:"secretName"`
 
 	// Datacenter is the name of the datacenter to use in the vCenter.
 	Datacenter string `json:"datacenter"`
@@ -668,6 +666,20 @@ type VSpherePlatformSpec struct {
 	// of vsphere.
 	DiskType VSphereDiskType `json:"diskType,omitempty"`
 
+	// TemplateVM the name of a VM that will be cloned to create compute nodes
+	TemplateVM string
+
+	// NumCPUs the number of vCPUs to be assigned to a VM
+	NumCPUs int32 `json:"numCpus"`
+
+	// NumCoresPerSocket the number of CPU cores per socket
+	NumCoresPerSocket int32 `json:"numCoresPerSocket"`
+
+	// MemoryMiB the amount of memory allocated to a VM in MiB
+	MemoryMiB int64 `json:"memoryMiB"`
+
+	// DiskSizeGB the amount of storage allocated to a VM in GiB
+	DiskSizeGiB int32 `json:"diskSizeGiB"`
 }
 
 // PowerVSPlatformSpec defines IBMCloud PowerVS specific settings for components

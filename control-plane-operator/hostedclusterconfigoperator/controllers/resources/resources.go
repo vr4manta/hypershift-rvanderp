@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
+	"github.com/davecgh/go-spew/spew"
 
 	prometheusoperatorv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
@@ -917,6 +918,42 @@ func (r *reconciler) reconcileCloudCredentialSecrets(ctx context.Context, hcp *h
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to reconcile powervs cloud credentials secret %w", err))
 		}
+	case hyperv1.VSpherePlatform:
+		var cloudCredentials corev1.Secret
+		err := r.cpClient.Get(ctx, client.ObjectKey{Namespace: hcp.Namespace, Name: hcp.Spec.Platform.VSphere.SecretName}, &cloudCredentials)
+		if err != nil {
+			errs = append(errs, fmt.Errorf("failed to reconcile vSphere cloud credentials secret %w", err))
+			return errs
+		}
+		spew.Dump(cloudCredentials)
+		//cloudCredentials := &corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: "kube-system", Name: "vsphere-creds"}}
+
+		targetCloudCredentials := &corev1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: "kube-system",
+				Name:      "vsphere-creds",
+			},
+		}
+		_, err = r.CreateOrUpdate(ctx, r.client, targetCloudCredentials, func() error {
+			usernameKey := fmt.Sprintf("%s.username", hcp.Spec.Platform.VSphere.VCenter)
+			passwordKey := fmt.Sprintf("%s.password", hcp.Spec.Platform.VSphere.VCenter)
+			username, credHasData := cloudCredentials.Data[usernameKey]
+			if !credHasData {
+				return fmt.Errorf("vsphere cloud credentials secret is missing username key %s", usernameKey)
+			}
+			password, credHasData := cloudCredentials.Data[passwordKey]
+			if !credHasData {
+				return fmt.Errorf("vsphere cloud credentials secret is missing password key %s", passwordKey)
+			}
+
+			targetCloudCredentials.Type = corev1.SecretTypeOpaque
+			if targetCloudCredentials.Data == nil {
+				targetCloudCredentials.Data = map[string][]byte{}
+			}
+			targetCloudCredentials.Data[usernameKey] = username
+			targetCloudCredentials.Data[passwordKey] = password
+			return nil
+		})
 	}
 	return errs
 }

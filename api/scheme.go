@@ -19,6 +19,7 @@ import (
 	capiazure "sigs.k8s.io/cluster-api-provider-azure/api/v1beta1"
 	capiibm "sigs.k8s.io/cluster-api-provider-ibmcloud/api/v1beta1"
 	capikubevirt "sigs.k8s.io/cluster-api-provider-kubevirt/api/v1alpha1"
+	capivsphere "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
 	capiv1 "sigs.k8s.io/cluster-api/api/v1beta1"
 )
 
@@ -58,4 +59,5 @@ func init() {
 	agentv1.AddToScheme(Scheme)
 	capikubevirt.AddToScheme(Scheme)
 	capiazure.AddToScheme(Scheme)
+	capivsphere.AddToScheme(Scheme)
 }

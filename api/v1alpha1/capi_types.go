@@ -5,6 +5,7 @@ import (
 	_ "sigs.k8s.io/cluster-api-provider-aws/api/v1beta1"
 	_ "sigs.k8s.io/cluster-api-provider-aws/exp/api/v1beta1"
 	_ "sigs.k8s.io/cluster-api-provider-ibmcloud/api/v1beta1"
+	_ "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
 	_ "sigs.k8s.io/cluster-api/api/v1beta1"
 	_ "sigs.k8s.io/cluster-api/exp/addons/api/v1beta1"
 	_ "sigs.k8s.io/cluster-api/exp/api/v1beta1"

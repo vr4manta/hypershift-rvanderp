@@ -49,6 +49,9 @@ var capiResources = map[string]string{
 	"cluster-api-provider-azure/infrastructure.cluster.x-k8s.io_azureclusters.yaml":                  "v1beta1",
 	"cluster-api-provider-azure/infrastructure.cluster.x-k8s.io_azuremachines.yaml":                  "v1beta1",
 	"cluster-api-provider-azure/infrastructure.cluster.x-k8s.io_azuremachinetemplates.yaml":          "v1beta1",
+	"cluster-api-provider-vsphere/infrastructure.cluster.x-k8s.io_vspherecluster identities.yaml":    "v1beta1",
+	"cluster-api-provider-vsphere/infrastructure.cluster.x-k8s.io_vsphereclusters.yaml":              "v1beta1",
+	"cluster-api-provider-vsphere/infrastructure.cluster.x-k8s.io_vsphereclustertemplates.yaml":      "v1beta1",
 }
 
 func getContents(fs embed.FS, file string) []byte {

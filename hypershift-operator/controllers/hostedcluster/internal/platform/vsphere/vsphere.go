@@ -2,6 +2,7 @@ package vsphere
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 
@@ -18,7 +19,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const providerImage = "gcr.io/k8s-staging-cluster-api-azure/cluster-api-azure-controller:v20220217-v1.1.0-193-gf7fd1995"
+const providerImage = "gcr.io/cluster-api-provider-vsphere/release/manager:v1.3.0"
 
 type VSphere struct{}
 
@@ -41,6 +42,8 @@ func (v VSphere) ReconcileCAPIInfraCR(
 		if cluster.Annotations == nil {
 			cluster.Annotations = map[string]string{}
 		}
+		cluster.Spec.ControlPlaneEndpoint.Host = apiEndpoint.Host
+		cluster.Spec.ControlPlaneEndpoint.Port = apiEndpoint.Port
 		cluster.Annotations[capiv1.ManagedByAnnotation] = "external"
 		cluster.Spec.Server = hcluster.Spec.Platform.VSphere.VCenter
 		cluster.Status.Ready = true
@@ -62,12 +65,13 @@ func (v VSphere) CAPIProviderDeploymentSpec(hcluster *hyperv1.HostedCluster, hcp
 	}
 	return &appsv1.DeploymentSpec{Template: corev1.PodTemplateSpec{Spec: corev1.PodSpec{
 		Containers: []corev1.Container{{
-			Name:    "manager",
-			Image:   image,
-			Command: []string{"/manager"},
+			Name:  "manager",
+			Image: image,
 			Args: []string{
+				"--enable-leader-election",
+				"--logtostderr",
+				"--v=4",
 				"--namespace=$(MY_NAMESPACE)",
-				"--leader-elect=true",
 			},
 			Resources: corev1.ResourceRequirements{
 				Requests: corev1.ResourceList{
@@ -85,18 +89,8 @@ func (v VSphere) CAPIProviderDeploymentSpec(hcluster *hyperv1.HostedCluster, hcp
 					},
 				},
 				{
-					Name: "VSPHERE_USERNAME",
-					ValueFrom: &corev1.EnvVarSource{SecretKeyRef: &corev1.SecretKeySelector{
-						LocalObjectReference: corev1.LocalObjectReference{Name: hcluster.Spec.Platform.VSphere.Username},
-						Key:                  "VSPHERE_USERNAME",
-					}},
-				},
-				{
-					Name: "VSPHERE_PASSWORD",
-					ValueFrom: &corev1.EnvVarSource{SecretKeyRef: &corev1.SecretKeySelector{
-						LocalObjectReference: corev1.LocalObjectReference{Name: hcluster.Spec.Platform.VSphere.Password},
-						Key:                  "VSPHERE_PASSWORD",
-					}},
+					Name:  "HOME",
+					Value: "/tmp",
 				},
 			},
 			VolumeMounts: []corev1.VolumeMount{
@@ -104,6 +98,11 @@ func (v VSphere) CAPIProviderDeploymentSpec(hcluster *hyperv1.HostedCluster, hcp
 					Name:      "capi-webhooks-tls",
 					ReadOnly:  true,
 					MountPath: "/tmp/k8s-webhook-server/serving-certs",
+				},
+				{
+					Name:      "capv-manager-creds",
+					ReadOnly:  true,
+					MountPath: "/etc/capv",
 				},
 			},
 		}},
@@ -116,6 +115,14 @@ func (v VSphere) CAPIProviderDeploymentSpec(hcluster *hyperv1.HostedCluster, hcp
 					},
 				},
 			},
+			{
+				Name: "capv-manager-creds",
+				VolumeSource: corev1.VolumeSource{
+					Secret: &corev1.SecretVolumeSource{
+						SecretName: "capv-manager-creds",
+					},
+				},
+			},
 		},
 	}}}, nil
 }
@@ -123,7 +130,7 @@ func (v VSphere) CAPIProviderDeploymentSpec(hcluster *hyperv1.HostedCluster, hcp
 func (v VSphere) ReconcileCredentials(ctx context.Context, c client.Client, createOrUpdate upsert.CreateOrUpdateFN, hcluster *hyperv1.HostedCluster, controlPlaneNamespace string) error {
 
 	var source corev1.Secret
-	name := client.ObjectKey{Namespace: hcluster.Namespace, Name: hcluster.Spec.Platform.VSphere.Username}
+	name := client.ObjectKey{Namespace: hcluster.Namespace, Name: hcluster.Spec.Platform.VSphere.SecretName}
 	if err := c.Get(ctx, name, &source); err != nil {
 		return fmt.Errorf("failed to get secret %s: %w", name, err)
 	}
@@ -134,8 +141,26 @@ func (v VSphere) ReconcileCredentials(ctx context.Context, c client.Client, crea
 			target.Data = map[string][]byte{}
 		}
 		for k, v := range source.Data {
-			target.Data[k] = v
+			keyedName := fmt.Sprintf("%s.%s", hcluster.Spec.Platform.VSphere.VCenter, k)
+			target.Data[keyedName] = v
 		}
+		return nil
+	})
+
+	target = &corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: controlPlaneNamespace, Name: "capv-manager-creds"}}
+	_, err = createOrUpdate(ctx, c, target, func() error {
+		if target.Data == nil {
+			target.Data = map[string][]byte{}
+		}
+
+		if _, exists := source.Data["username"]; !exists {
+			return errors.New("username not found in vSphere platform secret")
+		}
+		if _, exists := source.Data["password"]; !exists {
+			return errors.New("password not found in vSphere platform secret")
+		}
+		credentialFileContent := fmt.Sprintf("username: %s\npassword: %s\n", source.Data["username"], source.Data["password"])
+		target.Data["credentials.yaml"] = []byte(credentialFileContent)
 		return nil
 	})
 	return err

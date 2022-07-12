@@ -326,6 +326,8 @@ type NodePoolPlatform struct {
 	//
 	// +optional
 	PowerVS *PowerVSNodePoolPlatform `json:"powervs,omitempty"`
+
+	VSphere *VSpherePlatformSpec `json:vsphere,omitempty`
 }
 
 // PowerVSNodePoolPlatform specifies the configuration of a NodePool when operating
