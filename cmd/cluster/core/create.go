@@ -66,6 +66,7 @@ type CreateOptions struct {
 	AgentPlatform                    AgentPlatformCreateOptions
 	AzurePlatform                    AzurePlatformOptions
 	PowerVSPlatform                  PowerVSPlatformOptions
+	VSpherePlatform 				 VSpherePlatformOptions
 	Wait                             bool
 	Timeout                          time.Duration
 
@@ -136,6 +137,22 @@ type AzurePlatformOptions struct {
 	InstanceType      string
 	DiskSizeGB        int32
 	AvailabilityZones []string
+}
+
+type VSpherePlatformOptions struct {
+	VCenter 		  string
+	Username 		  string
+	Password 		  string
+	Datacenter 		  string
+	DefaultDatastore  string
+	Folder 			  string
+	Cluster 		  string
+	ResourcePool 	  string
+	TemplateVM 		  string
+	NumCPUs 		  int32
+	NumCoresPerSocket int32
+	MemoryMiB         int64
+	DiskSizeGB        int32
 }
 
 func createCommonFixture(ctx context.Context, opts *CreateOptions) (*apifixtures.ExampleOptions, error) {

@@ -75,5 +75,8 @@ func ReconcileInfrastructure(infra *configv1.Infrastructure, hcp *hyperv1.Hosted
 			Zone:           hcp.Spec.Platform.PowerVS.Zone,
 			CISInstanceCRN: hcp.Spec.Platform.PowerVS.CISInstanceCRN,
 		}
+	case hyperv1.VSpherePlatform:
+		infra.Status.PlatformStatus.VSphere = &configv1.VSpherePlatformStatus{}
 	}
+
 }

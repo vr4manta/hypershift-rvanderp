@@ -195,6 +195,13 @@ github.com/cespare/xxhash/v2
 # github.com/clarketm/json v1.14.1
 ## explicit
 github.com/clarketm/json
+# github.com/coredns/caddy v1.1.0
+## explicit; go 1.13
+github.com/coredns/caddy/caddyfile
+# github.com/coredns/corefile-migration v1.0.17
+## explicit; go 1.14
+github.com/coredns/corefile-migration/migration
+github.com/coredns/corefile-migration/migration/corefile
 # github.com/coreos/go-semver v0.3.0
 ## explicit
 github.com/coreos/go-semver/semver
@@ -218,7 +225,7 @@ github.com/davecgh/go-spew/spew
 # github.com/dimchansky/utfbom v1.1.1
 ## explicit
 github.com/dimchansky/utfbom
-# github.com/docker/distribution v2.7.1+incompatible
+# github.com/docker/distribution v2.8.1+incompatible
 ## explicit
 github.com/docker/distribution
 github.com/docker/distribution/digestset
@@ -370,6 +377,9 @@ github.com/hashicorp/go-retryablehttp
 # github.com/hashicorp/go-uuid v1.0.1
 ## explicit
 github.com/hashicorp/go-uuid
+# github.com/hashicorp/go-version v1.3.0
+## explicit
+github.com/hashicorp/go-version
 # github.com/imdario/mergo v0.3.12
 ## explicit; go 1.13
 github.com/imdario/mergo
@@ -417,9 +427,38 @@ github.com/munnerz/goautoneg
 # github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f
 ## explicit
 github.com/mwitkow/go-conntrack
+# github.com/nxadm/tail v1.4.8
+## explicit; go 1.13
+github.com/nxadm/tail
+github.com/nxadm/tail/ratelimiter
+github.com/nxadm/tail/util
+github.com/nxadm/tail/watch
+github.com/nxadm/tail/winfile
 # github.com/oklog/ulid v1.3.1
 ## explicit
 github.com/oklog/ulid
+# github.com/onsi/ginkgo v1.16.5
+## explicit; go 1.16
+github.com/onsi/ginkgo
+github.com/onsi/ginkgo/config
+github.com/onsi/ginkgo/formatter
+github.com/onsi/ginkgo/internal/codelocation
+github.com/onsi/ginkgo/internal/containernode
+github.com/onsi/ginkgo/internal/failer
+github.com/onsi/ginkgo/internal/global
+github.com/onsi/ginkgo/internal/leafnodes
+github.com/onsi/ginkgo/internal/remote
+github.com/onsi/ginkgo/internal/spec
+github.com/onsi/ginkgo/internal/spec_iterator
+github.com/onsi/ginkgo/internal/specrunner
+github.com/onsi/ginkgo/internal/suite
+github.com/onsi/ginkgo/internal/testingtproxy
+github.com/onsi/ginkgo/internal/writer
+github.com/onsi/ginkgo/reporters
+github.com/onsi/ginkgo/reporters/stenographer
+github.com/onsi/ginkgo/reporters/stenographer/support/go-colorable
+github.com/onsi/ginkgo/reporters/stenographer/support/go-isatty
+github.com/onsi/ginkgo/types
 # github.com/onsi/gomega v1.19.0
 ## explicit; go 1.18
 github.com/onsi/gomega
@@ -522,6 +561,46 @@ github.com/tombuildsstuff/giovanni/version
 # github.com/vincent-petithory/dataurl v1.0.0
 ## explicit
 github.com/vincent-petithory/dataurl
+# github.com/vmware-tanzu/net-operator-api v0.0.0-20210401185409-b0dc6c297707
+## explicit; go 1.13
+github.com/vmware-tanzu/net-operator-api/api/v1alpha1
+# github.com/vmware-tanzu/vm-operator-api v0.1.4-0.20211029224930-6ec913d11bff
+## explicit; go 1.13
+github.com/vmware-tanzu/vm-operator-api/api/v1alpha1
+# github.com/vmware-tanzu/vm-operator/external/ncp v0.0.0-20211209213435-0f4ab286f64f
+## explicit; go 1.13
+github.com/vmware-tanzu/vm-operator/external/ncp/api/v1alpha1
+# github.com/vmware-tanzu/vm-operator/external/tanzu-topology v0.0.0-20211209213435-0f4ab286f64f
+## explicit; go 1.13
+github.com/vmware-tanzu/vm-operator/external/tanzu-topology/api/v1alpha1
+# github.com/vmware/govmomi v0.27.1
+## explicit; go 1.14
+github.com/vmware/govmomi
+github.com/vmware/govmomi/find
+github.com/vmware/govmomi/history
+github.com/vmware/govmomi/internal
+github.com/vmware/govmomi/list
+github.com/vmware/govmomi/nfc
+github.com/vmware/govmomi/object
+github.com/vmware/govmomi/pbm
+github.com/vmware/govmomi/pbm/methods
+github.com/vmware/govmomi/pbm/types
+github.com/vmware/govmomi/property
+github.com/vmware/govmomi/session
+github.com/vmware/govmomi/session/keepalive
+github.com/vmware/govmomi/task
+github.com/vmware/govmomi/vapi/internal
+github.com/vmware/govmomi/vapi/rest
+github.com/vmware/govmomi/vapi/tags
+github.com/vmware/govmomi/view
+github.com/vmware/govmomi/vim25
+github.com/vmware/govmomi/vim25/debug
+github.com/vmware/govmomi/vim25/methods
+github.com/vmware/govmomi/vim25/mo
+github.com/vmware/govmomi/vim25/progress
+github.com/vmware/govmomi/vim25/soap
+github.com/vmware/govmomi/vim25/types
+github.com/vmware/govmomi/vim25/xml
 # go.mongodb.org/mongo-driver v1.8.3
 ## explicit; go 1.10
 go.mongodb.org/mongo-driver/bson
@@ -677,13 +756,22 @@ google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
 ## explicit; go 1.11
+# gopkg.in/fsnotify.v1 v1.4.7
+## explicit
+gopkg.in/fsnotify.v1
+# gopkg.in/gcfg.v1 v1.2.3
+## explicit
+gopkg.in/gcfg.v1
+gopkg.in/gcfg.v1/scanner
+gopkg.in/gcfg.v1/token
+gopkg.in/gcfg.v1/types
 # gopkg.in/go-playground/validator.v9 v9.31.0
 ## explicit
 gopkg.in/go-playground/validator.v9
 # gopkg.in/inf.v0 v0.9.1
 ## explicit
 gopkg.in/inf.v0
-# gopkg.in/ini.v1 v1.63.2
+# gopkg.in/ini.v1 v1.66.2
 ## explicit
 gopkg.in/ini.v1
 # gopkg.in/square/go-jose.v2 v2.5.1
@@ -691,6 +779,12 @@ gopkg.in/ini.v1
 gopkg.in/square/go-jose.v2
 gopkg.in/square/go-jose.v2/cipher
 gopkg.in/square/go-jose.v2/json
+# gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
+## explicit
+gopkg.in/tomb.v1
+# gopkg.in/warnings.v0 v0.1.2
+## explicit
+gopkg.in/warnings.v0
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
@@ -750,12 +844,20 @@ k8s.io/api/storage/v1beta1
 ## explicit; go 1.16
 k8s.io/apiextensions-apiserver/pkg/apis/apiextensions
 k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1
+k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1
+k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset
+k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/scheme
+k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1
+k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset/typed/apiextensions/v1beta1
 # k8s.io/apimachinery v0.24.2
 ## explicit; go 1.16
+k8s.io/apimachinery/pkg/api/apitesting
+k8s.io/apimachinery/pkg/api/apitesting/fuzzer
 k8s.io/apimachinery/pkg/api/equality
 k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/api/meta
 k8s.io/apimachinery/pkg/api/resource
+k8s.io/apimachinery/pkg/apis/meta/fuzzer
 k8s.io/apimachinery/pkg/apis/meta/internalversion
 k8s.io/apimachinery/pkg/apis/meta/internalversion/scheme
 k8s.io/apimachinery/pkg/apis/meta/v1
@@ -1041,6 +1143,10 @@ k8s.io/client-go/util/jsonpath
 k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/retry
 k8s.io/client-go/util/workqueue
+# k8s.io/cluster-bootstrap v0.23.0
+## explicit; go 1.16
+k8s.io/cluster-bootstrap/token/api
+k8s.io/cluster-bootstrap/token/util
 # k8s.io/component-base v0.24.2
 ## explicit; go 1.16
 k8s.io/component-base/config
@@ -1054,6 +1160,7 @@ k8s.io/klog/v2/internal/buffer
 k8s.io/klog/v2/internal/clock
 k8s.io/klog/v2/internal/serialize
 k8s.io/klog/v2/internal/severity
+k8s.io/klog/v2/klogr
 # k8s.io/kube-aggregator v0.20.2
 ## explicit; go 1.15
 k8s.io/kube-aggregator/pkg/apis/apiregistration
@@ -1103,19 +1210,35 @@ kubevirt.io/controller-lifecycle-operator-sdk/pkg/sdk/api
 # sigs.k8s.io/apiserver-network-proxy v0.0.24
 ## explicit; go 1.16
 sigs.k8s.io/apiserver-network-proxy/pkg/util
-# sigs.k8s.io/cluster-api v1.1.4 => sigs.k8s.io/cluster-api v1.0.0
+# sigs.k8s.io/cluster-api v1.1.5 => sigs.k8s.io/cluster-api v1.0.0
 ## explicit; go 1.16
+sigs.k8s.io/cluster-api/api/v1alpha3
+sigs.k8s.io/cluster-api/api/v1alpha4
 sigs.k8s.io/cluster-api/api/v1beta1
+sigs.k8s.io/cluster-api/api/v1beta1/index
+sigs.k8s.io/cluster-api/bootstrap/kubeadm/api/v1beta1
 sigs.k8s.io/cluster-api/cmd/clusterctl/api/v1alpha3
+sigs.k8s.io/cluster-api/controllers/noderefutil
+sigs.k8s.io/cluster-api/controllers/remote
+sigs.k8s.io/cluster-api/controlplane/kubeadm/api/v1beta1
 sigs.k8s.io/cluster-api/errors
 sigs.k8s.io/cluster-api/exp/addons/api/v1beta1
 sigs.k8s.io/cluster-api/exp/api/v1beta1
 sigs.k8s.io/cluster-api/feature
 sigs.k8s.io/cluster-api/util
 sigs.k8s.io/cluster-api/util/annotations
+sigs.k8s.io/cluster-api/util/certs
+sigs.k8s.io/cluster-api/util/collections
 sigs.k8s.io/cluster-api/util/conditions
+sigs.k8s.io/cluster-api/util/container
+sigs.k8s.io/cluster-api/util/conversion
+sigs.k8s.io/cluster-api/util/kubeconfig
+sigs.k8s.io/cluster-api/util/labels
 sigs.k8s.io/cluster-api/util/patch
+sigs.k8s.io/cluster-api/util/predicates
+sigs.k8s.io/cluster-api/util/secret
 sigs.k8s.io/cluster-api/util/version
+sigs.k8s.io/cluster-api/version
 # sigs.k8s.io/cluster-api-provider-aws v1.1.0
 ## explicit; go 1.17
 sigs.k8s.io/cluster-api-provider-aws/api/v1beta1
@@ -1133,6 +1256,41 @@ sigs.k8s.io/cluster-api-provider-ibmcloud/api/v1beta1
 # sigs.k8s.io/cluster-api-provider-kubevirt v0.0.0-00010101000000-000000000000 => github.com/openshift/cluster-api-provider-kubevirt v0.0.0-20211223062810-ef64d5ff1cde
 ## explicit; go 1.17
 sigs.k8s.io/cluster-api-provider-kubevirt/api/v1alpha1
+# sigs.k8s.io/cluster-api-provider-vsphere v1.3.0
+## explicit; go 1.17
+sigs.k8s.io/cluster-api-provider-vsphere
+sigs.k8s.io/cluster-api-provider-vsphere/apis/v1alpha3
+sigs.k8s.io/cluster-api-provider-vsphere/apis/v1alpha4
+sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1
+sigs.k8s.io/cluster-api-provider-vsphere/apis/vmware/v1beta1
+sigs.k8s.io/cluster-api-provider-vsphere/controllers
+sigs.k8s.io/cluster-api-provider-vsphere/controllers/vmware
+sigs.k8s.io/cluster-api-provider-vsphere/feature
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/builder
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/constants
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/context
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/context/fake
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/context/vmware
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/identity
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/manager
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/record
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/cluster
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/esxi
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/extra
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/find
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/metadata
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/net
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/template
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/govmomi/vcenter
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/network
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/services/vmoperator
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/session
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/taggable
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/util
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/util/vmware
+sigs.k8s.io/cluster-api-provider-vsphere/pkg/version
 # sigs.k8s.io/controller-runtime v0.12.2
 ## explicit; go 1.17
 sigs.k8s.io/controller-runtime
@@ -1153,15 +1311,21 @@ sigs.k8s.io/controller-runtime/pkg/controller
 sigs.k8s.io/controller-runtime/pkg/controller/controllertest
 sigs.k8s.io/controller-runtime/pkg/controller/controllerutil
 sigs.k8s.io/controller-runtime/pkg/conversion
+sigs.k8s.io/controller-runtime/pkg/envtest
 sigs.k8s.io/controller-runtime/pkg/event
 sigs.k8s.io/controller-runtime/pkg/handler
 sigs.k8s.io/controller-runtime/pkg/healthz
 sigs.k8s.io/controller-runtime/pkg/internal/controller
 sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics
+sigs.k8s.io/controller-runtime/pkg/internal/flock
 sigs.k8s.io/controller-runtime/pkg/internal/httpserver
 sigs.k8s.io/controller-runtime/pkg/internal/log
 sigs.k8s.io/controller-runtime/pkg/internal/objectutil
 sigs.k8s.io/controller-runtime/pkg/internal/recorder
+sigs.k8s.io/controller-runtime/pkg/internal/testing/addr
+sigs.k8s.io/controller-runtime/pkg/internal/testing/certs
+sigs.k8s.io/controller-runtime/pkg/internal/testing/controlplane
+sigs.k8s.io/controller-runtime/pkg/internal/testing/process
 sigs.k8s.io/controller-runtime/pkg/leaderelection
 sigs.k8s.io/controller-runtime/pkg/log
 sigs.k8s.io/controller-runtime/pkg/log/zap

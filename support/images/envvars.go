@@ -9,6 +9,7 @@ const (
 	AzureCAPIProviderEnvVar     = "IMAGE_AZURE_CAPI_PROVIDER"
 	KubevirtCAPIProviderEnvVar  = "IMAGE_KUBEVIRT_CAPI_PROVIDER"
 	KonnectivityEnvVar          = "IMAGE_KONNECTIVITY"
+	VSphereCAPIProviderEnvVar   = "IMAGE_VSPHERE_CAPI_PROVIDER"
 )
 
 // TagMapping returns a mapping between tags in an image-refs ImageStream
@@ -22,5 +23,6 @@ func TagMapping() map[string]string {
 		"cluster-api-provider-aws":      AWSCAPIProviderEnvVar,
 		"cluster-api-provider-azure":    AzureCAPIProviderEnvVar,
 		"cluster-api-provider-kubevirt": KubevirtCAPIProviderEnvVar,
+		"cluster-api-provider-vsphere":  VSphereCAPIProviderEnvVar,
 	}
 }

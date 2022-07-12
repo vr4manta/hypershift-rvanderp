@@ -3,6 +3,7 @@ package cluster
 import (
 	"time"
 
+	"github.com/openshift/hypershift/cmd/cluster/vsphere"
 	"github.com/spf13/cobra"
 
 	"github.com/openshift/hypershift/cmd/cluster/agent"
@@ -73,6 +74,7 @@ func NewCreateCommands() *cobra.Command {
 	cmd.AddCommand(kubevirt.NewCreateCommand(opts))
 	cmd.AddCommand(azure.NewCreateCommand(opts))
 	cmd.AddCommand(powervs.NewCreateCommand(opts))
+	cmd.AddCommand(vsphere.NewCreateCommand(opts))
 
 	return cmd
 }

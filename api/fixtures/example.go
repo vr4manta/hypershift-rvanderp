@@ -76,6 +76,7 @@ type ExampleOptions struct {
 	Kubevirt                         *ExampleKubevirtOptions
 	Azure                            *ExampleAzureOptions
 	PowerVS                          *ExamplePowerVSOptions
+	VSphere							 *ExampleVSphereOptions
 	NetworkType                      hyperv1.NetworkType
 	ControlPlaneAvailabilityPolicy   hyperv1.AvailabilityPolicy
 	InfrastructureAvailabilityPolicy hyperv1.AvailabilityPolicy
@@ -121,6 +122,23 @@ type ExampleAWSOptions struct {
 	ResourceTags       []hyperv1.AWSResourceTag
 	EndpointAccess     string
 	ProxyAddress       string
+}
+
+type ExampleVSphereOptions struct {
+	VCenter 		  string
+	Username 		  string
+	Password 		  string
+	Datacenter 		  string
+	DefaultDatastore  string
+	Folder 			  string
+	Cluster 		  string
+	ResourcePool 	  string
+	TemplateVM 		  string
+	NumCPUs 		  int32
+	NumCoresPerSocket int32
+	MemoryMiB         int64
+	DiskSizeGB        int32
+
 }
 
 type ExampleAzureOptions struct {
@@ -325,7 +343,11 @@ web_identity_token_file = /var/run/secrets/openshift/serviceaccount/token
 		platformSpec = hyperv1.PlatformSpec{
 			Type: hyperv1.NonePlatform,
 		}
-		services = getServicePublishingStrategyMappingByAPIServerAddress(o.None.APIServerAddress, o.NetworkType)
+		services = getIngressServicePublishingStrategyMapping(o.NetworkType)
+	case o.VSphere != nil:
+		platformSpec = hyperv1.PlatformSpec{
+			Type: hyperv1.VSpherePlatform,
+		}
 	case o.Agent != nil:
 		platformSpec = hyperv1.PlatformSpec{
 			Type: hyperv1.AgentPlatform,
