@@ -5270,6 +5270,18 @@ PowerVSNodePoolPlatform
 <p>PowerVS specifies the configuration used when using IBMCloud PowerVS platform.</p>
 </td>
 </tr>
+<tr>
+<td>
+<code>vsphere</code></br>
+<em>
+<a href="#hypershift.openshift.io/v1alpha1.VSpherePlatformSpec">
+VSpherePlatformSpec
+</a>
+</em>
+</td>
+<td>
+</td>
+</tr>
 </tbody>
 </table>
 ###NodePoolSpec { #hypershift.openshift.io/v1alpha1.NodePoolSpec }
@@ -6734,9 +6746,159 @@ capacity.</p>
 </td>
 </tr></tbody>
 </table>
+###VSphereNodePoolPlatform { #hypershift.openshift.io/v1alpha1.VSphereNodePoolPlatform }
+<p>
+</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>vmsize</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<code>template</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Template is the name of the VM or template which is cloned to create new nodes</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>diskSizeGB</code></br>
+<em>
+int32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+</td>
+</tr>
+<tr>
+<td>
+<code>cpus</code></br>
+<em>
+int32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>Cpus is the number of vCPUs allocated to a node</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>coresPerSocket</code></br>
+<em>
+int32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>CoresPerSocket defines the topology of cores per socket to the node</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>memoryMB</code></br>
+<em>
+int32
+</em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>MemoryMB defines the amount of memory allocated to the node</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>datacenter</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Datacenter is the name of the datacenter to use in the vCenter.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>defaultDatastore</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>DefaultDatastore is the default datastore to use for provisioning volumes.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>folder</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Folder is the absolute path of the folder that will be used and/or created for
+virtual machines. The absolute path is of the form /<datacenter>/vm/<folder>/<subfolder>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>cluster</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Cluster is the name of the cluster virtual machines will be cloned into.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>resourcePool</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>ResourcePool is the absolute path of the resource pool where virtual machines will be
+created. The absolute path is of the form /<datacenter>/host/<cluster>/Resources/<resourcepool>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>network</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Network specifies the name of the network to be used by the cluster.</p>
+</td>
+</tr>
+</tbody>
+</table>
 ###VSpherePlatformSpec { #hypershift.openshift.io/v1alpha1.VSpherePlatformSpec }
 <p>
 (<em>Appears on:</em>
+<a href="#hypershift.openshift.io/v1alpha1.NodePoolPlatform">NodePoolPlatform</a>, 
 <a href="#hypershift.openshift.io/v1alpha1.PlatformSpec">PlatformSpec</a>)
 </p>
 <p>
@@ -6896,6 +7058,61 @@ Value must be one of:
 &#34;thick&#34;, 
 &#34;thin&#34;
 </p>
+</td>
+</tr>
+<tr>
+<td>
+<code>templateVM</code></br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>TemplateVM the name of a VM that will be cloned to create compute nodes</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>numCpus</code></br>
+<em>
+int32
+</em>
+</td>
+<td>
+<p>NumCPUs the number of vCPUs to be assigned to a VM</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>numCoresPerSocket</code></br>
+<em>
+int32
+</em>
+</td>
+<td>
+<p>NumCoresPerSocket the number of CPU cores per socket</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>memoryMiB</code></br>
+<em>
+int64
+</em>
+</td>
+<td>
+<p>MemoryMiB the amount of memory allocated to a VM in MiB</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>diskSizeGiB</code></br>
+<em>
+int32
+</em>
+</td>
+<td>
+<p>DiskSizeGB the amount of storage allocated to a VM in GiB</p>
 </td>
 </tr>
 </tbody>

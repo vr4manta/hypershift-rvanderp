@@ -667,7 +667,7 @@ type VSpherePlatformSpec struct {
 	DiskType VSphereDiskType `json:"diskType,omitempty"`
 
 	// TemplateVM the name of a VM that will be cloned to create compute nodes
-	TemplateVM string
+	TemplateVM string `json:"templateVM"`
 
 	// NumCPUs the number of vCPUs to be assigned to a VM
 	NumCPUs int32 `json:"numCpus"`

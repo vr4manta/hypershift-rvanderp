@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 
 	prometheusoperatorv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
@@ -925,8 +924,6 @@ func (r *reconciler) reconcileCloudCredentialSecrets(ctx context.Context, hcp *h
 			errs = append(errs, fmt.Errorf("failed to reconcile vSphere cloud credentials secret %w", err))
 			return errs
 		}
-		spew.Dump(cloudCredentials)
-		//cloudCredentials := &corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: "kube-system", Name: "vsphere-creds"}}
 
 		targetCloudCredentials := &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{

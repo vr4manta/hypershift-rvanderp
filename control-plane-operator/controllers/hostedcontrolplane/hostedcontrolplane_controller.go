@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/blang/semver"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/go-logr/logr"
 	routev1 "github.com/openshift/api/route/v1"
 	hyperv1 "github.com/openshift/hypershift/api/v1alpha1"
@@ -88,6 +89,7 @@ type InfrastructureStatus struct {
 }
 
 func (s InfrastructureStatus) IsReady() bool {
+	spew.Dump(s)
 	return len(s.APIHost) > 0 &&
 		len(s.OAuthHost) > 0 &&
 		len(s.KonnectivityHost) > 0 &&

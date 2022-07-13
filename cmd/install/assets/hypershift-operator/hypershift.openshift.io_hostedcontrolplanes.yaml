@@ -2626,6 +2626,11 @@ spec:
                         description: DefaultDatastore is the default datastore to
                           use for provisioning volumes.
                         type: string
+                      diskSizeGiB:
+                        description: DiskSizeGB the amount of storage allocated to
+                          a VM in GiB
+                        format: int32
+                        type: integer
                       diskType:
                         description: DiskType is the name of the disk provisioning
                           type, valid values are thin, thick, and eagerZeroedThick.
@@ -2645,10 +2650,25 @@ spec:
                       ingressVIP:
                         description: IngressVIP is the virtual IP address for ingress
                         type: string
+                      memoryMiB:
+                        description: MemoryMiB the amount of memory allocated to a
+                          VM in MiB
+                        format: int64
+                        type: integer
                       network:
                         description: Network specifies the name of the network to
                           be used by the cluster.
                         type: string
+                      numCoresPerSocket:
+                        description: NumCoresPerSocket the number of CPU cores per
+                          socket
+                        format: int32
+                        type: integer
+                      numCpus:
+                        description: NumCPUs the number of vCPUs to be assigned to
+                          a VM
+                        format: int32
+                        type: integer
                       resourcePool:
                         description: ResourcePool is the absolute path of the resource
                           pool where virtual machines will be created. The absolute
@@ -2658,6 +2678,10 @@ spec:
                         description: secretName refers to name of the secret containing
                           the username and password required to connect to the vCenter
                         type: string
+                      templateVM:
+                        description: TemplateVM the name of a VM that will be cloned
+                          to create compute nodes
+                        type: string
                       vCenter:
                         description: VCenter is the domain name or IP address of the
                           vCenter.
@@ -2665,7 +2689,12 @@ spec:
                     required:
                     - datacenter
                     - defaultDatastore
+                    - diskSizeGiB
+                    - memoryMiB
+                    - numCoresPerSocket
+                    - numCpus
                     - secretName
+                    - templateVM
                     - vCenter
                     type: object
                 required:
