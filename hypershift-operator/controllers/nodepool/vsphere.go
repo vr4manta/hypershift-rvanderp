@@ -2,7 +2,7 @@ package nodepool
 
 import (
 	"encoding/base64"
-	"github.com/davecgh/go-spew/spew"
+
 	hyperv1 "github.com/openshift/hypershift/api/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	capivsphere "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
@@ -38,7 +38,6 @@ func vSphereMachineTemplateSpec(hcluster *hyperv1.HostedCluster, nodePool *hyper
 			"disk.EnableUUID":                         "TRUE",
 		},
 	}
-	spew.Dump(cloneSpec)
 	template := capivsphere.VSphereMachineTemplateSpec{
 		Template: capivsphere.VSphereMachineTemplateResource{
 			Spec: capivsphere.VSphereMachineSpec{

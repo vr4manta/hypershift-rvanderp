@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/blang/semver"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/go-logr/logr"
 	routev1 "github.com/openshift/api/route/v1"
 	hyperv1 "github.com/openshift/hypershift/api/v1alpha1"
@@ -18,6 +17,7 @@ import (
 	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/aws"
 	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/azure"
 	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/powervs"
+	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/vsphere"
 	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/clusterpolicy"
 	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cno"
 	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/common"
@@ -89,7 +89,6 @@ type InfrastructureStatus struct {
 }
 
 func (s InfrastructureStatus) IsReady() bool {
-	spew.Dump(s)
 	return len(s.APIHost) > 0 &&
 		len(s.OAuthHost) > 0 &&
 		len(s.KonnectivityHost) > 0 &&
@@ -1310,6 +1309,13 @@ func (r *HostedControlPlaneReconciler) reconcileCloudProviderConfig(ctx context.
 			return azure.ReconcileCloudConfigWithCredentials(withSecrets, hcp, credentialsSecret)
 		}); err != nil {
 			return fmt.Errorf("failed to reconcile Azure cloud config with credentials: %w", err)
+		}
+	case hyperv1.VSpherePlatform:
+		cfg := &corev1.ConfigMap{ObjectMeta: metav1.ObjectMeta{Namespace: hcp.Namespace, Name: "vsphere-cloud-config"}}
+		if _, err := r.CreateOrUpdate(ctx, r, cfg, func() error {
+			return vsphere.ReconcileCloudConfig(cfg, hcp)
+		}); err != nil {
+			return fmt.Errorf("failed to reconcile vsphere cloud config: %w", err)
 		}
 	}
 	return nil

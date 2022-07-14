@@ -14,7 +14,6 @@ import (
 	"time"
 
 	ignitionapi "github.com/coreos/ignition/v2/config/v3_2/types"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/go-logr/logr"
 	"github.com/google/uuid"
 	configv1 "github.com/openshift/api/config/v1"
@@ -1698,7 +1697,6 @@ func machineTemplateBuilders(hcluster *hyperv1.HostedCluster, nodePool *hyperv1.
 		mutateTemplate = func(object client.Object) error {
 			o, _ := object.(*capivsphere.VSphereMachineTemplate)
 			o.Spec = *machineTemplateSpec.(*capivsphere.VSphereMachineTemplateSpec)
-			spew.Dump(o.Spec)
 			if o.Annotations == nil {
 				o.Annotations = make(map[string]string)
 			}
