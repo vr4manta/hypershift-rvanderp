@@ -120,7 +120,7 @@ cluster-api-provider-azure: $(CONTROLLER_GEN)
 	$(CONTROLLER_GEN) $(CRD_OPTIONS) paths="./vendor/sigs.k8s.io/cluster-api-provider-azure/api/v1beta1" output:crd:artifacts:config=cmd/install/assets/cluster-api-provider-azure
 
 .PHONY: cluster-api-provider-vsphere
-cluster-api-provider-azure: $(CONTROLLER_GEN)
+cluster-api-provider-vsphere: $(CONTROLLER_GEN)
 	rm -rf cmd/install/assets/cluster-api-provider-vsphere/*.yaml
 	$(CONTROLLER_GEN) $(CRD_OPTIONS) paths="./vendor/sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1" output:crd:artifacts:config=cmd/install/assets/cluster-api-provider-vsphere
 
