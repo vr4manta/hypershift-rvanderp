@@ -1877,13 +1877,13 @@ func (r *HostedClusterReconciler) reconcileAutoscaler(ctx context.Context, creat
 // image based on the following order of precedence (from most to least
 // preferred):
 //
-// 1. The image specified by the ControlPlaneOperatorImageAnnotation on the
-//    HostedCluster resource itself
-// 2. The hypershift image specified in the release payload indicated by the
-//    HostedCluster's release field
-// 3. The hypershift-operator's own image for release versions 4.9 and 4.10
-// 4. The registry.ci.openshift.org/hypershift/hypershift:4.8 image for release
-//    version 4.8
+//  1. The image specified by the ControlPlaneOperatorImageAnnotation on the
+//     HostedCluster resource itself
+//  2. The hypershift image specified in the release payload indicated by the
+//     HostedCluster's release field
+//  3. The hypershift-operator's own image for release versions 4.9 and 4.10
+//  4. The registry.ci.openshift.org/hypershift/hypershift:4.8 image for release
+//     version 4.8
 //
 // If no image can be found according to these rules, an error is returned.
 func GetControlPlaneOperatorImage(ctx context.Context, hc *hyperv1.HostedCluster, releaseProvider releaseinfo.Provider, hypershiftOperatorImage string, pullSecret []byte) (string, error) {
@@ -2367,7 +2367,7 @@ func reconcileCAPICluster(cluster *capiv1.Cluster, hcluster *hyperv1.HostedClust
 			Name:       infraCR.GetName(),
 		},
 	}
-
+	cluster.Status.InfrastructureReady = true
 	return nil
 }
 

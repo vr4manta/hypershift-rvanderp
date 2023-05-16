@@ -30,6 +30,7 @@ import (
 	hyperv1 "github.com/openshift/hypershift/api/v1alpha1"
 	awsutil "github.com/openshift/hypershift/cmd/infra/aws/util"
 	"github.com/openshift/hypershift/hypershift-operator/controllers/hostedcluster"
+	"github.com/openshift/hypershift/hypershift-operator/controllers/manifests/clusterapi/vsphere"
 	"github.com/openshift/hypershift/hypershift-operator/controllers/nodepool"
 	"github.com/openshift/hypershift/hypershift-operator/controllers/platform/aws"
 	"github.com/openshift/hypershift/hypershift-operator/controllers/proxy"
@@ -233,6 +234,12 @@ func run(ctx context.Context, opts *StartOptions, log logr.Logger) error {
 	}
 	if opts.CertDir != "" {
 		if err := hostedcluster.SetupWebhookWithManager(mgr); err != nil {
+			return fmt.Errorf("unable to create webhook: %w", err)
+		}
+	}
+	switch hyperv1.PlatformType(opts.PrivatePlatform) {
+	case hyperv1.VSpherePlatform:
+		if err := vsphere.SetupWebhookWithManager(mgr); err != nil {
 			return fmt.Errorf("unable to create webhook: %w", err)
 		}
 	}
