@@ -1,6 +1,12 @@
 name: Build
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      parameter:
+        description: My Parameter
+  push:
+    branches: [ "vsphere-2023" ]
 #on:
 #  push:
 #    branches: [ "vsphere-2023" ]
