@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	capivsphere "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
+
 	"github.com/blang/semver"
 	ignitionapi "github.com/coreos/ignition/v2/config/v3_2/types"
 	"github.com/go-logr/logr"
@@ -129,6 +131,7 @@ func (r *NodePoolReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Watches(&source.Kind{Type: &capiv1.MachineSet{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		Watches(&source.Kind{Type: &capiaws.AWSMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		Watches(&source.Kind{Type: &agentv1.AgentMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
+		Watches(&source.Kind{Type: &capivsphere.VSphereMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		Watches(&source.Kind{Type: &capiazure.AzureMachineTemplate{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
 		// We want to reconcile when the user data Secret or the token Secret is unexpectedly changed out of band.
 		Watches(&source.Kind{Type: &corev1.Secret{}}, handler.EnqueueRequestsFromMapFunc(enqueueParentNodePool)).
@@ -894,7 +897,7 @@ func (r *NodePoolReconciler) reconcile(ctx context.Context, hcluster *hyperv1.Ho
 	}
 
 	// Reconcile (Platform)MachineTemplate.
-	template, mutateTemplate, machineTemplateSpecJSON, err := machineTemplateBuilders(hcluster, nodePool, infraID, ami, powervsBootImage, kubevirtBootImage, cpoCapabilities.CreateDefaultAWSSecurityGroup)
+	template, mutateTemplate, machineTemplateSpecJSON, err := machineTemplateBuilders(hcluster, nodePool, infraID, ami, powervsBootImage, kubevirtBootImage, cpoCapabilities.CreateDefaultAWSSecurityGroup, userDataSecret)
 	if err != nil {
 		if _, isNotReady := err.(*NotReadyError); isNotReady {
 			log.Info("Waiting to create machine template", "message", err.Error())
@@ -2252,6 +2255,11 @@ func (r *NodePoolReconciler) listMachineTemplates(nodePool *hyperv1.NodePool) ([
 		if err != nil {
 			return nil, err
 		}
+	case hyperv1.VSpherePlatform:
+		gvk, err = apiutil.GVKForObject(&capivsphere.VSphereMachineTemplate{}, api.Scheme)
+		if err != nil {
+			return nil, err
+		}
 	default:
 		// need a default path that returns a value that does not cause the hypershift operator to crash
 		// if no explicit machineTemplate is defined safe to assume none exist
@@ -2346,7 +2354,7 @@ func isPlatformNone(nodePool *hyperv1.NodePool) bool {
 // a func to mutate the (platform)MachineTemplate.spec, a json string representation for (platform)MachineTemplate.spec
 // and an error.
 func machineTemplateBuilders(hcluster *hyperv1.HostedCluster, nodePool *hyperv1.NodePool,
-	infraID, ami, powervsBootImage string, kubevirtBootImage kubevirt.BootImage, defaultSG bool) (client.Object, func(object client.Object) error, string, error) {
+	infraID, ami, powervsBootImage string, kubevirtBootImage kubevirt.BootImage, defaultSG bool, userDataSecret *corev1.Secret) (client.Object, func(object client.Object) error, string, error) {
 	var mutateTemplate func(object client.Object) error
 	var template client.Object
 	var machineTemplateSpec interface{}
@@ -2415,6 +2423,18 @@ func machineTemplateBuilders(hcluster *hyperv1.HostedCluster, nodePool *hyperv1.
 		mutateTemplate = func(object client.Object) error {
 			o, _ := object.(*capipowervs.IBMPowerVSMachineTemplate)
 			o.Spec = *machineTemplateSpec.(*capipowervs.IBMPowerVSMachineTemplateSpec)
+			if o.Annotations == nil {
+				o.Annotations = make(map[string]string)
+			}
+			o.Annotations[nodePoolAnnotation] = client.ObjectKeyFromObject(nodePool).String()
+			return nil
+		}
+	case hyperv1.VSpherePlatform:
+		template = &capivsphere.VSphereMachineTemplate{}
+		machineTemplateSpec = vSphereMachineTemplateSpec(hcluster, nodePool, userDataSecret)
+		mutateTemplate = func(object client.Object) error {
+			o, _ := object.(*capivsphere.VSphereMachineTemplate)
+			o.Spec = *machineTemplateSpec.(*capivsphere.VSphereMachineTemplateSpec)
 			if o.Annotations == nil {
 				o.Annotations = make(map[string]string)
 			}

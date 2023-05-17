@@ -82,5 +82,9 @@ func ReconcileInfrastructure(infra *configv1.Infrastructure, hcp *hyperv1.Hosted
 			CISInstanceCRN: hcp.Spec.Platform.PowerVS.CISInstanceCRN,
 			ResourceGroup:  hcp.Spec.Platform.PowerVS.ResourceGroup,
 		}
+	case hyperv1.VSpherePlatform:
+		infra.Spec.CloudConfig.Name = "vsphere-cloud-config"
+		infra.Spec.CloudConfig.Key = "vsphere.conf"
+		infra.Status.PlatformStatus.VSphere = &configv1.VSpherePlatformStatus{}
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/openshift/hypershift/api/v1beta1"
+	"github.com/openshift/hypershift/cmd/cluster/vsphere"
 
 	"github.com/spf13/cobra"
 
@@ -86,6 +87,7 @@ func NewCreateCommands() *cobra.Command {
 	cmd.AddCommand(kubevirt.NewCreateCommand(opts))
 	cmd.AddCommand(azure.NewCreateCommand(opts))
 	cmd.AddCommand(powervs.NewCreateCommand(opts))
+	cmd.AddCommand(vsphere.NewCreateCommand(opts))
 
 	return cmd
 }

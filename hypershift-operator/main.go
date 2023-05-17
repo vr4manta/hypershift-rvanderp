@@ -17,10 +17,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/openshift/hypershift/support/globalconfig"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/openshift/hypershift/hypershift-operator/controllers/manifests/clusterapi/vsphere"
+	"github.com/openshift/hypershift/support/globalconfig"
 
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -329,7 +331,12 @@ func run(ctx context.Context, opts *StartOptions, log logr.Logger) error {
 			return err
 		}
 	}
-
+	switch hyperv1.PlatformType(opts.PrivatePlatform) {
+	case hyperv1.VSpherePlatform:
+		if err := vsphere.SetupWebhookWithManager(mgr); err != nil {
+			return fmt.Errorf("unable to create webhook: %w", err)
+		}
+	}
 	if err := (&nodepool.NodePoolReconciler{
 		Client: mgr.GetClient(),
 		ReleaseProvider: &releaseinfo.ProviderWithOpenShiftImageRegistryOverridesDecorator{
