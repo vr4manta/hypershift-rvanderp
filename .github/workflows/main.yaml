@@ -39,11 +39,11 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Print image url
         run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"
-  deploy:
-    runs-on: ubuntu-20.04
-    steps:
       - uses: actions-hub/kubectl@master
+        name: redeploy hypershift operator
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         with:
           args: delete pods -n hypershift
+
+
