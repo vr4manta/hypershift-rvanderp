@@ -3,7 +3,6 @@ name: Build
 on: 
   push:
     branches: [ "vsphere-2023" ]
-  workflow_dispatch: ""
 jobs:
   build:
     runs-on: ubuntu-20.04
