@@ -1,9 +1,13 @@
 name: Build
 
-on: workflow_dispatch
-#on: 
-#  push:
-#    branches: [ "vsphere-2023" ]
+on:
+  workflow_dispatch:
+    inputs:
+      parameter:
+        description: My Parameter
+  push:
+    branches: [ "vsphere-2023" ]
+    
 jobs:
   build:
     runs-on: ubuntu-20.04
