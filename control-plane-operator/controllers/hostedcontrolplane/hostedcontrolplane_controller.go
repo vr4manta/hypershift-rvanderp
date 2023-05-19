@@ -86,6 +86,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/utils/pointer"
+	capvv1beta1 "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -690,6 +691,27 @@ func (r *HostedControlPlaneReconciler) Reconcile(ctx context.Context, req ctrl.R
 
 	if !hostedControlPlane.Status.Ready {
 		return ctrl.Result{RequeueAfter: hcpNotReadyRequeueInterval}, nil
+	} else {
+		r.Log.Info("Applying platform cluster status")
+		switch hostedControlPlane.Spec.Platform.Type {
+		case hyperv1.VSpherePlatform:
+			r.Log.Info("Setting vSphere cluster status to ready")
+			vsphereClusterKey := client.ObjectKey{
+				Namespace: hostedControlPlane.Namespace,
+				Name:      hostedControlPlane.Name,
+			}
+			vsphereCluster := &capvv1beta1.VSphereCluster{}
+			err := r.Client.Get(ctx, vsphereClusterKey, vsphereCluster)
+			if err != nil {
+				return result, err
+			}
+			vsphereCluster.Status.Ready = true
+			err = r.Client.Status().Update(ctx, vsphereCluster)
+			if err != nil {
+				return result, err
+			}
+			r.Log.Info("Set vSphere cluster status to ready")
+		}
 	}
 
 	return ctrl.Result{RequeueAfter: hcpReadyRequeueInterval}, nil

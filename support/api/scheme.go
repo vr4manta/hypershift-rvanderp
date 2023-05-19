@@ -2,6 +2,7 @@ package api
 
 import (
 	"os"
+	capivsphere "sigs.k8s.io/cluster-api-provider-vsphere/apis/v1beta1"
 
 	configv1 "github.com/openshift/api/config/v1"
 	imagev1 "github.com/openshift/api/image/v1"
@@ -55,6 +56,7 @@ var (
 func init() {
 	capiaws.AddToScheme(Scheme)
 	capiibm.AddToScheme(Scheme)
+	capivsphere.AddToScheme(Scheme)
 	clientgoscheme.AddToScheme(Scheme)
 	auditv1.AddToScheme(Scheme)
 	apiregistrationv1.AddToScheme(Scheme)

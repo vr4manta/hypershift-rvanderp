@@ -1674,7 +1674,25 @@ func setMachineDeploymentReplicas(nodePool *hyperv1.NodePool, machineDeployment 
 	}
 }
 
+var vsphereMetadataUnit = `[Unit]
+	Description=VMware metadata agent
+	Requires=vmtoolsd.service
+    After=vmtoolsd.service
+    ConditionVirtualization=vmware
+    Before=kubelet.service
+    Before=node-valid-hostname.service
+    Before=NetworkManager.service
+
+[Service]
+	Type=oneshot
+	Restart=on-failure
+	ExecStart=/usr/bin/bash -c "/usr/bin/hostnamectl set-hostname --static $(vmtoolsd --cmd 'info-get guestinfo.metadata' | base64 -d | grep local-hostname | cut -d':' -f2 | tr -d '\"')"
+
+[Install]
+WantedBy=multi-user.target`
+
 func ignConfig(encodedCACert, encodedToken, endpoint, targetConfigVersionHash string, proxy *configv1.Proxy, nodePool *hyperv1.NodePool) ignitionapi.Config {
+	vsphereMetadataEnabled := nodePool.Spec.Platform.Type == hyperv1.VSpherePlatform
 	cfg := ignitionapi.Config{
 		Ignition: ignitionapi.Ignition{
 			Version: "3.2.0",
@@ -1706,6 +1724,15 @@ func ignConfig(encodedCACert, encodedToken, endpoint, targetConfigVersionHash st
 							},
 						},
 					},
+				},
+			},
+		},
+		Systemd: ignitionapi.Systemd{
+			Units: []ignitionapi.Unit{
+				{
+					Contents: &vsphereMetadataUnit,
+					Name:     "hypershift-vsphere-hostname.service",
+					Enabled:  &vsphereMetadataEnabled,
 				},
 			},
 		},
