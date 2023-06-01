@@ -779,6 +779,12 @@ func (r *NodePoolReconciler) reconcile(ctx context.Context, hcluster *hyperv1.Ho
 			machine.Status.NodeRef = &corev1.ObjectReference{
 				Name: machine.ObjectMeta.Name,
 			}
+			log.Info(fmt.Sprintf("Updating machine status %v", machine.Status))
+			err := r.Status().Update(ctx, &machine)
+			if err != nil {
+				log.Error(err, "Unable to update machine status")
+				return ctrl.Result{}, err
+			}
 			/*log.Info(fmt.Sprintf("Checking machine for externalIP %v", machine.Status))
 			addresses := machine.Status.Addresses
 			if machine.Status.Addresses == nil {
