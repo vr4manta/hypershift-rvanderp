@@ -774,6 +774,40 @@ func (r *NodePoolReconciler) reconcile(ctx context.Context, hcluster *hyperv1.Ho
 		}
 	}
 
+	if nodePool.Spec.Platform.Type == hyperv1.VSpherePlatform {
+		for _, machine := range machines {
+			machine.Status.NodeRef = &corev1.ObjectReference{
+				Name: machine.ObjectMeta.Name,
+			}
+			/*log.Info(fmt.Sprintf("Checking machine for externalIP %v", machine.Status))
+			addresses := machine.Status.Addresses
+			if machine.Status.Addresses == nil {
+				addresses = []capiv1.MachineAddress{}
+			}
+			addressInitialized := false
+			for _, address := range addresses {
+				if address.Type == capiv1.MachineInternalDNS {
+					addressInitialized = true
+					break
+				}
+			}
+			if addressInitialized {
+				continue
+			}
+
+			machine.Status.Addresses = append(machine.Status.Addresses, capiv1.MachineAddress{
+				Type:    capiv1.MachineInternalDNS,
+				Address: machine.ObjectMeta.Name,
+			})
+			log.Info(fmt.Sprintf("Updating machine status %v", machine.Status))
+			err := r.Status().Update(ctx, &machine)
+			if err != nil {
+				log.Error(err, "Unable to update machine status")
+				return ctrl.Result{}, err
+			}*/
+		}
+	}
+
 	if status == corev1.ConditionTrue {
 		message = hyperv1.AllIsWellMessage
 	}
