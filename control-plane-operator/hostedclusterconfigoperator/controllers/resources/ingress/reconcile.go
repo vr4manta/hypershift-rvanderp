@@ -80,6 +80,19 @@ func ReconcileDefaultIngressController(ingressController *operatorv1.IngressCont
 				},
 			},
 		}
+	case hyperv1.VSpherePlatform:
+		ingressController.Spec.EndpointPublishingStrategy = &operatorv1.EndpointPublishingStrategy{
+			Type: operatorv1.HostNetworkStrategyType,
+			HostNetwork: &operatorv1.HostNetworkStrategy{
+				Protocol:  operatorv1.TCPProtocol,
+				HTTPPort:  80,
+				HTTPSPort: 443,
+				StatsPort: 1936,
+			},
+		}
+		ingressController.Spec.DefaultCertificate = &corev1.LocalObjectReference{
+			Name: manifests.IngressDefaultIngressControllerCert().Name,
+		}
 	default:
 		ingressController.Spec.EndpointPublishingStrategy = &operatorv1.EndpointPublishingStrategy{
 			Type: operatorv1.LoadBalancerServiceStrategyType,
