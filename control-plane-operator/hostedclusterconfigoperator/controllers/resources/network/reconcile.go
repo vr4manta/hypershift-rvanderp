@@ -71,9 +71,7 @@ func ReconcileNetworkOperator(network *operatorv1.Network, networkType hyperv1.N
 				network.Spec.DefaultNetwork.OVNKubernetesConfig = &operatorv1.OVNKubernetesConfig{}
 			}
 			mtu := uint32(1400)
-			genevePort := uint32(6081)
 			network.Spec.DefaultNetwork.OVNKubernetesConfig.MTU = &mtu
-			network.Spec.DefaultNetwork.OVNKubernetesConfig.GenevePort = &genevePort
 			network.Spec.DefaultNetwork.OVNKubernetesConfig.GatewayConfig.RoutingViaHost = false
 		}
 	default:
