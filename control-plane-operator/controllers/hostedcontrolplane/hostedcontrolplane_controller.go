@@ -5,13 +5,14 @@ import (
 	crand "crypto/rand"
 	"errors"
 	"fmt"
-	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/vsphere"
 	"math/big"
 	"net/http"
 	"os"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/vsphere"
 
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -3712,6 +3713,20 @@ func (r *HostedControlPlaneReconciler) reconcileCloudControllerManager(ctx conte
 			return kubevirt.ReconcileDeployment(deployment, hcp, sa.Name, releaseImageProvider)
 		}); err != nil {
 			return fmt.Errorf("failed to reconcile %s cloud config manager deployment: %w", hcp.Spec.Platform.Type, err)
+		}
+	case hyperv1.VSpherePlatform:
+		ownerRef := config.OwnerRefFrom(hcp)
+		sa := vsphere.CCMServiceAccount(hcp.Namespace)
+		if _, err := createOrUpdate(ctx, r, sa, func() error {
+			return vsphere.ReconcileCCMServiceAccount(sa, ownerRef)
+		}); err != nil {
+			return fmt.Errorf("failed to reconcile %s cloud provider service account: %w", hcp.Spec.Platform.Type, err)
+		}
+		deployment := vsphere.CCMDeployment(hcp.Namespace)
+		if _, err := createOrUpdate(ctx, r, deployment, func() error {
+			return vsphere.ReconcileDeployment(deployment, hcp, sa.Name, releaseImageProvider)
+		}); err != nil {
+			return fmt.Errorf("failed to reconcile %s cloud controller manager deployment: %w", hcp.Spec.Platform.Type, err)
 		}
 	}
 	return nil

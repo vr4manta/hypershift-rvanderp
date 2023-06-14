@@ -128,20 +128,26 @@ func (v VSphere) ReconcileCredentials(ctx context.Context, c client.Client, crea
 		return fmt.Errorf("failed to get secret %s: %w", name, err)
 	}
 
-	target := &corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: controlPlaneNamespace, Name: name.Name}}
-	_, err := createOrUpdate(ctx, c, target, func() error {
-		if target.Data == nil {
-			target.Data = map[string][]byte{}
+	names := []string{name.Name, "cloud-controller-creds"}
+	for _, name := range names {
+		target := &corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: controlPlaneNamespace, Name: name}}
+		_, err := createOrUpdate(ctx, c, target, func() error {
+			if target.Data == nil {
+				target.Data = map[string][]byte{}
+			}
+			for k, v := range source.Data {
+				keyedName := fmt.Sprintf("%s.%s", hcluster.Spec.Platform.VSphere.VCenter, k)
+				target.Data[keyedName] = v
+			}
+			return nil
+		})
+		if err != nil {
+			return err
 		}
-		for k, v := range source.Data {
-			keyedName := fmt.Sprintf("%s.%s", hcluster.Spec.Platform.VSphere.VCenter, k)
-			target.Data[keyedName] = v
-		}
-		return nil
-	})
+	}
 
-	target = &corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: controlPlaneNamespace, Name: "capv-manager-creds"}}
-	_, err = createOrUpdate(ctx, c, target, func() error {
+	target := &corev1.Secret{ObjectMeta: metav1.ObjectMeta{Namespace: controlPlaneNamespace, Name: "capv-manager-creds"}}
+	_, err := createOrUpdate(ctx, c, target, func() error {
 		if target.Data == nil {
 			target.Data = map[string][]byte{}
 		}

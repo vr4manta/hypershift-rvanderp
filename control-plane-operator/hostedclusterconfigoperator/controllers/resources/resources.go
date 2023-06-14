@@ -1307,6 +1307,12 @@ func (r *reconciler) reconcileCloudCredentialSecrets(ctx context.Context, hcp *h
 					Name:      "vsphere-cloud-credentials",
 				},
 			},
+			{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: hcp.Namespace,
+					Name:      "cloud-controller-creds",
+				},
+			},
 		}
 		for _, targetCredential := range targetCloudCredentials {
 			_, err = r.CreateOrUpdate(ctx, r.client, &targetCredential, func() error {

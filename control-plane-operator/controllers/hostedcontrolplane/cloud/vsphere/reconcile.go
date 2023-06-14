@@ -83,7 +83,7 @@ func buildCCMContainer(controllerManagerImage string) func(c *corev1.Container) 
 	return func(c *corev1.Container) {
 		c.Image = controllerManagerImage
 		c.ImagePullPolicy = corev1.PullIfNotPresent
-		c.Command = []string{"/bin/aws-cloud-controller-manager"}
+		c.Command = []string{"/bin/vsphere-cloud-controller-manager"}
 		c.Args = []string{
 			"--cloud-provider=vsphere",
 			"--use-service-account-credentials=false",
