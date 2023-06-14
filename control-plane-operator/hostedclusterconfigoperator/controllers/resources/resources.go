@@ -4,13 +4,14 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
-	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/vsphere"
 	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/openshift/hypershift/control-plane-operator/controllers/hostedcontrolplane/cloud/vsphere"
 
 	prometheusoperatorv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
@@ -1278,6 +1279,7 @@ func (r *reconciler) reconcileCloudCredentialSecrets(ctx context.Context, hcp *h
 		err = createPowerVSSecret(&imageRegistryCredentials, imageRegistryInstallerCloudCredentials)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to reconcile powervs image registry cloud credentials secret %w", err))
+		}
 	case hyperv1.VSpherePlatform:
 		var cloudCredentials corev1.Secret
 		err := r.cpClient.Get(ctx, client.ObjectKey{Namespace: hcp.Namespace, Name: hcp.Spec.Platform.VSphere.SecretName}, &cloudCredentials)
