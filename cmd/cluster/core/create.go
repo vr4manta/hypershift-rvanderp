@@ -138,6 +138,7 @@ type VSpherePlatformOptions struct {
 	Cluster           string
 	ResourcePool      string
 	TemplateVM        string
+	Network           string
 	NumCPUs           int32
 	NumCoresPerSocket int32
 	MemoryMiB         int64

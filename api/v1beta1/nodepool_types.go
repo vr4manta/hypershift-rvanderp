@@ -564,7 +564,7 @@ type VSphereNodePoolPlatform struct {
 	// +kubebuilder:default:=16384
 	// +kubebuilder:validation:Minimum=8192
 	// +optional
-	MemoryMB int32 `json:"memoryMB,omitempty"`
+	MemoryMB int64 `json:"memoryMB,omitempty"`
 
 	// Datacenter is the name of the datacenter to use in the vCenter.
 	Datacenter string `json:"datacenter"`

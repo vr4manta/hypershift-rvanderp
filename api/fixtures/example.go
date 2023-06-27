@@ -233,9 +233,39 @@ func (o ExampleOptions) Resources() *ExampleResources {
 			services = getIngressServicePublishingStrategyMapping(o.NetworkType, o.ExternalDNSDomain != "")
 		}
 	case o.VSphere != nil:
+		credentialSecret := &corev1.Secret{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: "v1",
+				Kind:       "Secret",
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      o.Name + "-vsphere-creds",
+				Namespace: namespace.Name,
+			},
+			Data: map[string][]byte{
+				"username": []byte(o.VSphere.Creds.Username),
+				"password": []byte(o.VSphere.Creds.Password),
+			},
+		}
+		resources = append(resources, credentialSecret)
 		platformSpec = hyperv1.PlatformSpec{
 			Type: hyperv1.VSpherePlatform,
+			VSphere: &hyperv1.VSpherePlatformSpec{
+				NumCPUs:           o.VSphere.NumCPUs,
+				MemoryMiB:         o.VSphere.MemoryMiB,
+				NumCoresPerSocket: o.VSphere.NumCoresPerSocket,
+				DiskSizeGiB:       o.VSphere.DiskSizeGB,
+				TemplateVM:        o.VSphere.TemplateVM,
+				Datacenter:        o.VSphere.Datacenter,
+				Folder:            o.VSphere.Folder,
+				DefaultDatastore:  o.VSphere.DefaultDatastore,
+				Cluster:           o.VSphere.Cluster,
+				ResourcePool:      o.VSphere.ResourcePool,
+				VCenter:           o.VSphere.VCenter,
+				SecretName:        credentialSecret.Name,
+			},
 		}
+		services = getServicePublishingStrategyMappingByAPIServerAddress(fmt.Sprintf("api.%s.%s", o.Name, o.BaseDomain), o.NetworkType)
 	case o.Agent != nil:
 		platformSpec = hyperv1.PlatformSpec{
 			Type: hyperv1.AgentPlatform,
@@ -591,6 +621,22 @@ func (o ExampleOptions) Resources() *ExampleResources {
 		}
 	case hyperv1.NonePlatform, hyperv1.AgentPlatform:
 		nodePools = append(nodePools, defaultNodePool(cluster.Name))
+	case hyperv1.VSpherePlatform:
+		nodePool := defaultNodePool(cluster.Name)
+		nodePool.Spec.Platform.VSphere = &hyperv1.VSphereNodePoolPlatform{
+			Cpus:             o.VSphere.NumCPUs,
+			MemoryMB:         o.VSphere.MemoryMiB,
+			CoresPerSocket:   o.VSphere.NumCoresPerSocket,
+			DiskSizeGB:       o.VSphere.DiskSizeGB,
+			Template:         o.VSphere.TemplateVM,
+			Datacenter:       o.VSphere.Datacenter,
+			Folder:           o.VSphere.Folder,
+			DefaultDatastore: o.VSphere.DefaultDatastore,
+			Cluster:          o.VSphere.Cluster,
+			ResourcePool:     o.VSphere.ResourcePool,
+			Network:          o.VSphere.Network,
+		}
+		nodePools = append(nodePools, nodePool)
 	case hyperv1.AzurePlatform:
 		if len(o.Azure.AvailabilityZones) > 0 {
 			for _, availabilityZone := range o.Azure.AvailabilityZones {

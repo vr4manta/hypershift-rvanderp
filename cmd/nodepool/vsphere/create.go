@@ -30,7 +30,7 @@ func NewCreateCommand(coreOpts *core.CreateNodePoolOptions) *cobra.Command {
 	cmd.Flags().Int32Var(&o.diskSizeGB, "disk-size", o.diskSizeGB, "The size of the root disk for machines in the NodePool (minimum 16)")
 	cmd.Flags().Int32Var(&o.cpus, "cpus", o.cpus, "The number of vCPUs allocated to a node")
 	cmd.Flags().Int32Var(&o.coresPerSocket, "cores-per-socket", o.coresPerSocket, "Defines the topology of cores per socket to the node")
-	cmd.Flags().Int32Var(&o.memoryMB, "memory", o.memoryMB, "The amount of memory in MB allocated to the node")
+	cmd.Flags().Int64Var(&o.memoryMB, "memory", o.memoryMB, "The amount of memory in MB allocated to the node")
 	cmd.Flags().StringVar(&o.resourcePool, "resource-pool", o.resourcePool, "The full path to the resource pool where nodes are to be deployed")
 	cmd.Flags().StringVar(&o.cluster, "cluster", o.cluster, "The cluster where nodes are to be deployed")
 	cmd.Flags().StringVar(&o.defaultDatastore, "datastore", o.defaultDatastore, "The datastore where nodes are to be deployed")
@@ -84,7 +84,7 @@ type VSpherePlatformCreateOptions struct {
 	// +kubebuilder:default:=16384
 	// +kubebuilder:validation:Minimum=8192
 	// +optional
-	memoryMB int32 `json:"memoryMB,omitempty"`
+	memoryMB int64 `json:"memoryMB,omitempty"`
 
 	// datacenter is the name of the datacenter to use in the vCenter.
 	datacenter string `json:"datacenter"`
